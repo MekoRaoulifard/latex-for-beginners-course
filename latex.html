@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LaTeX for Beginners Course</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background-color: #f9f9f9; }
+        .module { margin-bottom: 15px; border: 1px solid #ddd; border-left: 4px solid #0B0129; }
+        .module-title { background-color: #0B0129; color: white; padding: 10px; cursor: pointer; }
+        .module-content { padding: 10px; display: none; }
+        .module-content.active { display: block; }
+        iframe { border: 1px solid #464646; width: 720px; height: 405px; }
+        ul { padding-left: 20px; }
+        li { margin-bottom: 10px; }
+        hr { width: 50%; }
+        a { color: #0B0129; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <h1>LaTeX for Beginners Course</h1>
+    
+    <div class="module">
+        <div class="module-title" onclick="toggleModule('home')">Homepage and Syllabus</div>
+        <div class="module-content" id="home">
+            <table style="border-collapse: collapse; width: 99.2964%; height: 365px;" border="1">
+                <tr>
+                    <td style="width: 33.9721%;"><img src="HomePGAGE_Syllabus/Layout Diagram-1.png" alt="Layout Diagram" width="322" height="363" /></td>
+                    <td style="width: 66.0127%;">
+                        <h2>Overview of a 4-week online course developed for E-Teaching II</h2>
+                        <p>This course introduces beginners to LaTeX, a professional document creation tool, using a constructivist teaching approach. It consists of five modules designed to build LaTeX skills progressively over four weeks.</p>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <div class="module">
+        <div class="module-title" onclick="toggleModule('module1')">Module One: Introduction to LaTeX</div>
+        <div class="module-content" id="module1">
+            <p>Overview: Covers the basics of LaTeX, including setup and initial document creation using tools like Overleaf and Texmaker.</p>
+            <p>Keywords: LaTeX setup, Overleaf, Texmaker, beginner introduction</p>
+        </div>
+    </div>
+
+    <div class="module">
+        <div class="module-title" onclick="toggleModule('module2')">Module Two: Document Structure and Formatting</div>
+        <div class="module-content" id="module2">
+            <p>Overview: Focuses on organizing LaTeX documents with sections, subsections, and basic formatting techniques for professional layouts.</p>
+            <p>Keywords: document structure, formatting, LaTeX sections</p>
+        </div>
+    </div>
+
+    <div class="module">
+        <div class="module-title" onclick="toggleModule('module3')">Module Three: Mathematical Expressions</div>
+        <div class="module-content" id="module3">
+            <p>Overview: Teaches how to write and format mathematical expressions and equations using LaTeX commands for academic purposes.</p>
+            <p>Keywords: mathematical expressions, equations, LaTeX commands</p>
+        </div>
+    </div>
+
+    <div class="module">
+        <div class="module-title" onclick="toggleModule('module4')">Module Four: Advanced Features</div>
+        <div class="module-content" id="module4">
+            <p>Overview: Explores advanced LaTeX features such as creating tables, figures, and charts to enhance document functionality.</p>
+            <p>Keywords: tables, figures, charts, advanced LaTeX</p>
+        </div>
+    </div>
+
+    <div class="module">
+        <div class="module-title" onclick="toggleModule('module5')">Module Five: Project Review</div>
+        <div class="module-content" id="module5">
+            <p>Overview: Guides learners in creating a final project report that integrates all learned LaTeX skills, such as formatting, equations, and references.</p>
+            <p>Keywords: final project, LaTeX report, skill integration</p>
+        </div>
+    </div>
+
+    <script>
+        function toggleModule(id) {
+            const content = document.getElementById(id);
+            content.classList.toggle('active');
+            if (typeof SCORM2004_Initialize !== "undefined") {
+                SCORM2004_Initialize("");
+                SCORM2004_SetValue("cmi.core.lesson_status", "completed");
+                SCORM2004_Commit("");
+                SCORM2004_Terminate("");
+            }
+        }
+
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+            return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+            if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+                try {
+                    var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                    var firstSheetName = workbook.SheetNames[0];
+                    var worksheet = workbook.Sheets[firstSheetName];
+                    var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                    var filteredData = jsonData.filter(row => row.some(filledCell));
+                    var headerRowIndex = filteredData.findIndex((row, index) =>
+                        row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                    );
+                    if (headerRowIndex === -1 || headerRowIndex > 25) {
+                        headerRowIndex = 0;
+                    }
+                    var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex));
+                    csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                    return csv;
+                } catch (e) {
+                    console.error(e);
+                    return "";
+                }
+            }
+            return gk_fileData[filename] || "";
+        }
+    </script>
+</body>
+</html>
